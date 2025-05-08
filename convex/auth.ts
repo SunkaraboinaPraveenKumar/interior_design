@@ -18,7 +18,6 @@ export const getSession = query({
         id: identity._id,
         name: identity.name,
         email: identity.email,
-        image: identity.image,
         role: identity.role,
       },
     };

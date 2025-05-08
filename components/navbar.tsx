@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Avatar } from "@/components/ui/avatar";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 export function Navbar() {
   const { user, isAdmin, signOut } = useAuthContext();
@@ -30,6 +32,19 @@ export function Navbar() {
     return pathname.startsWith(path);
   };
 
+  // Helper for avatar content and color
+  const getAvatarContent = () =>
+    user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || "?";
+  const getAvatarColor = () => {
+    // Simple hash for color, or use a fixed color
+    if (!user?.email) return "bg-primary text-white";
+    const colors = [
+      "bg-blue-500", "bg-green-500", "bg-red-500", "bg-yellow-500", "bg-purple-500", "bg-pink-500"
+    ];
+    const idx = user.email.charCodeAt(0) % colors.length;
+    return `${colors[idx]} text-white`;
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between p-3">
@@ -37,7 +52,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold tracking-tight">Elegant Interiors</span>
           </Link>
-          
+
           <nav className="hidden md:flex items-center gap-6 text-sm">
             {navItems.map((item) => (
               <Link
@@ -55,34 +70,57 @@ export function Navbar() {
             ))}
           </nav>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            
             {user ? (
-              <>
-                {isAdmin && (
-                  <Link href="/admin/dashboard">
-                    <Button variant="ghost" size="sm">Dashboard</Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div>
+                    <Avatar
+                      className={`w-10 h-10 ${getAvatarColor()} flex items-center justify-center text-lg font-semibold cursor-pointer`}
+                      tabIndex={0}
+                    >
+                      {getAvatarContent()}
+                    </Avatar>
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-44 p-2">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-center font-medium mb-2">{user.name || user.email}</div>
+                    {isAdmin && (
+                      <Link href="/admin/dashboard">
+                        <Button variant="ghost" className="w-full justify-start" size="sm">
+                          Dashboard
+                        </Button>
+                      </Link>
+                    )}
+                    <Button
+                      onClick={signOut}
+                      variant="destructive"
+                      className="w-full justify-start"
+                      size="sm"
+                    >
+                      Sign Out
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ) :
+              (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" className="w-full justify-start" size="sm">Sign In</Button>
                   </Link>
-                )}
-                <Button onClick={signOut} variant="destructive" size="sm">
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" size="sm">Sign In</Button>
-                </Link>
-                <Link href="/register">
-                  <Button variant="default" size="sm">Sign Up</Button>
-                </Link>
-              </>
-            )}
+                  <Link href="/register">
+                    <Button variant="default" className="w-full justify-start" size="sm">Sign Up</Button>
+                  </Link>
+                </>
+              )
+            }
           </div>
-          
+
           <Button
             variant="ghost"
             size="icon"
@@ -93,7 +131,7 @@ export function Navbar() {
           </Button>
         </div>
       </div>
-      
+
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -121,10 +159,16 @@ export function Navbar() {
                   </Link>
                 ))}
               </nav>
-              
+
               <div className="flex flex-col gap-2 pt-2 border-t border-border/40">
                 <ThemeToggle />
-                
+                {user && (
+                  <div className="flex justify-center py-2">
+                    <Avatar className={`w-10 h-10 ${getAvatarColor()} flex items-center justify-center text-lg font-semibold`}>
+                      {getAvatarContent()}
+                    </Avatar>
+                  </div>
+                )}
                 {user ? (
                   <>
                     {isAdmin && (

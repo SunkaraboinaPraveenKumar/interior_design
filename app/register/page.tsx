@@ -23,23 +23,23 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name || !email || !password) {
       setError("All fields are required");
       return;
     }
-    
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError("");
-      
+
       const success = await signUp(name, email, password);
-      
+
       if (!success) {
         setError("Failed to create account");
       }
@@ -110,18 +110,6 @@ export default function RegisterPage() {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Create account"}
               </Button>
-              
-              <div className="mt-4 text-center text-sm">
-                <p className="text-muted-foreground">
-                  <span>For demo purposes:</span>
-                </p>
-                <p className="text-muted-foreground mt-1">
-                  <span>Use admin@example.com for admin access</span>
-                </p>
-                <p className="text-muted-foreground">
-                  <span>Use any other email for user access</span>
-                </p>
-              </div>
             </form>
           </CardContent>
           <CardFooter>

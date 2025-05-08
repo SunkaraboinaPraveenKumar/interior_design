@@ -26,12 +26,7 @@ export function Sidebar() {
       name: "Projects",
       href: "/admin/projects",
       icon: <GridIcon className="h-5 w-5" />,
-    },
-    {
-      name: "Settings",
-      href: "/admin/settings",
-      icon: <Settings className="h-5 w-5" />,
-    },
+    }
   ];
 
   const isActive = (path: string) => {
@@ -108,7 +103,7 @@ function SidebarContent({ routes, pathname, isActive, signOut, user }: SidebarCo
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
-              <span className={cn("transition-colors", isActive(route.href) ? "text-white" : "text-muted-foreground group-hover:text-foreground")}>{route.icon}</span>
+              <span className={cn("transition-colors", isActive(route.href) ? "dark:text-black text-white" : "text-muted-foreground group-hover:text-foreground")}>{route.icon}</span>
               {route.name}
             </Link>
           ))}

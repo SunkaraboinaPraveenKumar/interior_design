@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export type User = {
@@ -16,6 +16,9 @@ export default function useAuth() {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
+
+  const createUser = useMutation(api.users.createUser);
+  const login = useMutation(api.users.login);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -39,58 +42,36 @@ export default function useAuth() {
 
   const signIn = useCallback(
     async (email: string, password: string) => {
+      setLoading(true);
       try {
-        setLoading(true);
-        // In a real app, you would authenticate with a proper auth provider
-        // This is just a mock for the demo
-        const mockToken = "user-123";
-        const isAdmin = email.includes("admin@");
-        setUser({
-          id: mockToken,
-          name: email.split("@")[0],
-          email,
-          role: isAdmin ? "admin" : "user",
-        });
-        localStorage.setItem("token", mockToken);
-        setToken(mockToken);
-        router.push(isAdmin ? "/admin/dashboard" : "/projects");
+        const user = await login({ email, password });
+        if (!user) return false;
+        localStorage.setItem("token", user.tokenIdentifier);
+        setToken(user.tokenIdentifier);
+        router.push(user.role === "admin" ? "/admin/dashboard" : "/projects");
         return true;
-      } catch (error) {
-        console.error("Authentication error:", error);
-        return false;
       } finally {
         setLoading(false);
       }
     },
-    [router]
+    [router, login]
   );
 
   const signUp = useCallback(
     async (name: string, email: string, password: string) => {
+      setLoading(true);
       try {
-        setLoading(true);
-        // In a real app, you would register with a proper auth provider
-        // This is just a mock for the demo
-        const mockToken = "user-123";
-        const isAdmin = email.includes("admin@");
-        setUser({
-          id: mockToken,
-          name,
-          email,
-          role: isAdmin ? "admin" : "user",
-        });
-        localStorage.setItem("token", mockToken);
-        setToken(mockToken);
-        router.push(isAdmin ? "/admin/dashboard" : "/projects");
+        const tokenIdentifier = `${email}-${Date.now()}`;
+        await createUser({ name, email, password, tokenIdentifier });
+        localStorage.setItem("token", tokenIdentifier);
+        setToken(tokenIdentifier);
+        router.push("/projects");
         return true;
-      } catch (error) {
-        console.error("Registration error:", error);
-        return false;
       } finally {
         setLoading(false);
       }
     },
-    [router]
+    [router, createUser]
   );
 
   const signOut = useCallback(() => {

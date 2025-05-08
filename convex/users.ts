@@ -17,7 +17,7 @@ export const createUser = mutation({
   args: {
     name: v.string(),
     email: v.string(),
-    image: v.optional(v.string()),
+    password:v.string(),
     tokenIdentifier: v.string(),
   },
   handler: async (ctx, args) => {
@@ -25,7 +25,7 @@ export const createUser = mutation({
     const user = await ctx.db.insert("users", {
       name: args.name,
       email: args.email,
-      image: args.image,
+      password:args.password,
       tokenIdentifier: args.tokenIdentifier,
       role: "user",
     });
@@ -43,5 +43,25 @@ export const getUserRole = query({
       .first();
 
     return user?.role || null;
+  },
+});
+
+
+export const login = mutation({
+  args: { email: v.string(), password: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .filter(q=>q.eq(q.field('email'),args.email))
+      .first();
+
+    if (!user || user.password !== args.password) {
+      throw new Error("Invalid email or password");
+    }
+
+    return {
+      tokenIdentifier: user.tokenIdentifier,
+      role: user.role,
+    };
   },
 });

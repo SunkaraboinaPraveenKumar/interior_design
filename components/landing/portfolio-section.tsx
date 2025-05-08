@@ -11,7 +11,7 @@ import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function PortfolioSection() {
-  const projects = useQuery(api.projects.getFeaturedProjects);
+  const projects = useQuery(api.projects.getProjects);
 
   const container = {
     hidden: { opacity: 0 },
@@ -44,7 +44,7 @@ export function PortfolioSection() {
   };
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-16 md:py-24 p-5">
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
@@ -71,9 +71,9 @@ export function PortfolioSection() {
                     <div className="overflow-hidden rounded-lg border border-border/50 bg-card hover:border-primary/20 transition-colors duration-300">
                       <div className="relative">
                         <AspectRatio ratio={4/3}>
-                          {project.images && project.images.length > 0 ? (
+                          {project?.clientImage ? (
                             <img
-                              src={project.images[0].url}
+                              src={project.clientImage}
                               alt={project.title}
                               className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                             />

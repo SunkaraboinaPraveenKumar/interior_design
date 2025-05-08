@@ -79,12 +79,6 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="#"
-                    className="text-sm text-primary hover:text-primary/90"
-                  >
-                    Forgot password?
-                  </Link>
                 </div>
                 <Input
                   id="password"
@@ -105,21 +99,6 @@ export default function LoginPage() {
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
-              
-              <div className="mt-4 text-center text-sm">
-                <p className="text-muted-foreground">
-                  <span>For demo purposes:</span>
-                </p>
-                <p className="text-muted-foreground mt-1">
-                  <span>Admin login: admin@example.com</span>
-                </p>
-                <p className="text-muted-foreground">
-                  <span>User login: user@example.com</span>
-                </p>
-                <p className="text-muted-foreground">
-                  <span>(Any password will work)</span>
-                </p>
-              </div>
             </form>
           </CardContent>
           <CardFooter>

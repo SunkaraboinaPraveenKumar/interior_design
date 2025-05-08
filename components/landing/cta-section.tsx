@@ -9,7 +9,7 @@ export function CTASection() {
   return (
     <section className="py-16 md:py-24">
       <div className="container">
-        <motion.div 
+        <motion.div
           className="max-w-3xl mx-auto text-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -22,19 +22,14 @@ export function CTASection() {
           <p className="text-lg mb-8">
             Get in touch with our design team to schedule a free consultation. We'll discuss your vision, needs, and how we can create a space that's uniquely yours.
           </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+
+          <div className="flex flex-row sm:flex-col justify-center gap-4">
             <Link href="/contact">
-              <Button size="lg" variant="secondary" className="font-medium">
+              <Button size="lg" variant="secondary" className="font-medium w-auto">
                 Get a Free Consultation
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
-            
-            <Button size="lg" variant="secondary" className="font-medium">
-              <PhoneCall className="mr-2 h-4 w-4" />
-              Call (555) 123-4567
-            </Button>
           </div>
         </motion.div>
       </div>
