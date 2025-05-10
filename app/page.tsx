@@ -8,7 +8,7 @@ import { CTASection } from "@/components/landing/cta-section";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col p-5">
       <Navbar />
       <main className="flex-1">
         <HeroSection />
